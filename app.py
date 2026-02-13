@@ -7,7 +7,7 @@ import streamlit as st
 # -----------------------------
 # Helpers
 # -----------------------------
-WORDLE_PAT = re.compile(r"\bWordle\s+(?P<puzzle>\d+)\s+(?P<result>([1-6]/6|X/6))", re.IGNORECASE)
+WORDLE_PAT = re.compile(r"\bWordle\s+(?P<puzzle>[\d,]+)\s+(?P<result>([1-6]/6|X/6))", re.IGNORECASE)
 
 LINE_PATS = [
     # iPhone common:
@@ -161,7 +161,7 @@ for line in lines:
     if not wm:
         continue
 
-    puzzle = int(wm.group("puzzle"))
+    puzzle = int(wm.group("puzzle").replace(",", ""))
     result = wm.group("result").upper()
 
     all_players.add(name)
