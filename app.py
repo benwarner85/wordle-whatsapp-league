@@ -12,10 +12,10 @@ WORDLE_PAT = re.compile(r"\bWordle\s+(?P<puzzle>[\d,]+)\s+(?P<result>([1-6]/6|X/
 LINE_PATS = [
     # iPhone common:
     # "12/01/2026, 08:15 - Name: message"
-    re.compile(r"^(?P<d>\d{1,2}/\d{1,2}/\d{2,4}), (?P<t>\d{1,2}:\d{2}) - (?P<name>.*?): (?P<msg>.*)$"),
+    re.compile(r"^(?P<d>\d{1,2}/\d{1,2}/\d{2,4}), (?P<t>\d{1,2}:\d{2}(?::\d{2})?) - (?P<name>.*?): (?P<msg>.*)$"),
     # Another common:
     # "[12/01/2026, 08:15] Name: message"
-    re.compile(r"^\[(?P<d>\d{1,2}/\d{1,2}/\d{2,4}), (?P<t>\d{1,2}:\d{2})\] (?P<name>.*?): (?P<msg>.*)$"),
+    re.compile(r"^\[(?P<d>\d{1,2}/\d{1,2}/\d{2,4}), (?P<t>\d{1,2}:\d{2}(?::\d{2})?)\] (?P<name>.*?): (?P<msg>.*)$"),
 ]
 
 def parse_dt(d_str: str, t_str: str, prefer_dmy: bool) -> datetime:
@@ -36,7 +36,7 @@ def parse_dt(d_str: str, t_str: str, prefer_dmy: bool) -> datetime:
     if d is None:
         raise ValueError(f"Could not parse date: {d_str}")
 
-    tm = datetime.strptime(t_str, "%H:%M").time()
+tm = datetime.strptime(t_str, "%H:%M:%S" if t_str.count(":") == 2 else "%H:%M").time()
     return datetime.combine(d, tm)
 
 def score_from_result(result: str) -> float:
